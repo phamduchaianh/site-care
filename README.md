@@ -1,116 +1,104 @@
-# ⚡ SiteCare — Autonomous Depot Optimization
+# SiteCare: Autonomous Depot Optimization
 
-> **Kempower Hackathon 2026 Project**  
-> Autonomous depot intelligence, predictive maintenance, and dynamic grid optimization for mission-critical EV fleet charging.
+Autonomous depot intelligence, predictive maintenance, and dynamic grid optimization for mission-critical electric vehicle charging infrastructure.
 
-[![Kempower Hackathon](https://img.shields.io/badge/Hackathon-Kempower%202026-ff6700.svg)](https://kempower.com)
-[![Status](https://img.shields.io/badge/Status-Demo%20Ready-10b981.svg)]()
-[![Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-blue.svg)]()
-[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20External-orange.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-gray.svg)](LICENSE)
+Developed for the Kempower Challenge 2026.
 
 ---
 
-## 📌 Executive Summary
+## Overview
 
-Modern electric bus depots and commercial logistics hubs operate under strict operational constraints: razor-thin departure schedules, severe SLA breach penalties (€150+ per missed departure), and soaring peak electricity rates with strict local grid limits.
+High-power commercial fleet charging depots—such as municipal transit hubs and logistics centers—face stringent uptime requirements. A single charger failure during overnight charging can cause cascading departure delays, contractual Service Level Agreement (SLA) penalties, and service disruptions. Concurrently, unmanaged charging during peak electricity tariff windows strains local grid connections and inflates operating expenses.
 
-**SiteCare** is an intelligent, autonomous depot optimization system designed specifically for high-power DC fast-charging infrastructure (such as Kempower Satellite & Power Unit systems). It combines:
-1. **Predictive Hardware Anomaly Detection:** Intercepts thermal anomalies and power derates hours before catastrophic shutdown occurs, autonomously scheduling certified technicians and isolating at-risk dispensers.
-2. **Dynamic Grid & Spot-Price Optimization:** Shifts non-urgent charging demand away from high peak-tariff hours into low-cost energy windows while enforcing hard site grid ceilings (400 kW) and guaranteeing vehicle target State-of-Charge (SoC).
+SiteCare addresses these challenges through two automated subsystems:
+
+1. **Predictive Hardware Anomaly Detection:** Identifies thermal anomalies and intermittent fault signatures in high-power charging cabinets prior to critical failure, orchestrating proactive field service and load rerouting.
+2. **Dynamic Grid and Tariff Optimization:** Schedules vehicle charging sessions against day-ahead spot electricity prices while enforcing strict site-level power ceilings to avoid peak demand penalties.
 
 ---
 
-## 🎯 Live Interactive Demo
+## Core Scenarios
 
-The demo is a lightweight, zero-dependency, single-page application built to simulate real-world depot operations across two distinct operational sites:
+The accompanying demonstration models two distinct operational environments:
 
-| Depot Site | Primary Role | Operational Focus |
+### Scenario 1: S1 Bus Depot North (Predictive Maintenance & SLA Protection)
+
+* **Asset:** Cabinet C1-3 (360 kW Power Unit).
+* **Observed Condition:** Operating at 58.9°C peak (+14.9°C above peer cabinets F010 and F012), following two intermittent fault logs on November 9 and 10. At 01:50, an F015 warning triggers a 50% derate.
+* **Operational Risk:** Vehicle B09 requires a 90% State of Charge (SoC) prior to 06:00 departure. Three additional buses are queued across associated dispensers D1-9 through D1-12. Unmitigated shutdown risks €600 in contract SLA penalties (€150 per missed departure).
+* **Automated Mitigation:**
+  * Auto-dispatches certified technician TE1 with required arrival before 04:00.
+  * Quarantines dispensers D1-9 through D1-12 against new high-current sessions to arrest thermal escalation.
+* **Operational Comparison:**
+
+| Parameter | Baseline (Unmanaged) | SiteCare Automated Intervention |
 |---|---|---|
-| **S1 Bus Depot North** | Public Transit Fleet | Predictive Maintenance, Fleet Departure SLA Protection |
-| **S2 Logistics Depot East** | Delivery & Heavy Transport | Spot Price Arbitrage, Grid Constraint Management |
+| Failure Event | Thermal shutdown at 02:25 | Proactive derate and controlled dispatch |
+| Field Service | Reactive dispatch; repaired at 06:31 | Proactive dispatch; on-site before 04:00 |
+| Fleet Impact | 4 buses missed morning departure | 0 missed departures; SoC targets met |
+| Contract Penalty | €600 | €0 |
 
-### 🚀 Running the Demo Locally
-No build step or runtime installation required:
+---
+
+### Scenario 2: S2 Logistics Depot East (Smart Energy & Grid Peak Shaving)
+
+* **Site Constraints:** 400 kW maximum site grid capacity.
+* **Market Dynamics:** Significant tariff delta between 18:00 peak (€82.33 / 100 kWh) and 20:00 off-peak (€11.06 / 100 kWh) — a difference of €71.27 / 100 kWh.
+* **Optimization Logic:**
+  * Classifies vehicles by departure urgency and current SoC.
+  * Prioritizes high-urgency vehicles while shifting flexible demand into lower-cost tariff intervals.
+  * Dynamic power throttling ensures aggregate site consumption remains strictly under the 400 kW threshold.
+* **Simulation Results:**
+
+| Metric | Unmanaged Charging | SiteCare Smart Charging | Impact |
+|---|---|---|---|
+| Trucks Below Target SoC | 4 | 1 | 75% reduction |
+| Grid Limit Violations (>400 kW) | 0 | 0 | 100% compliance |
+| Total Energy Cost | €689 | €482 | 30.0% savings |
+
+---
+
+## Demonstration Application
+
+The demonstration interface is implemented as a lightweight, zero-dependency single-page application.
+
+### Technical Implementation
+
+* **Frontend:** Standards-compliant HTML5, CSS3, and ES6 JavaScript.
+* **Graphics:** Inline vector SVG for price curve visualization.
+* **Runtime Dependencies:** None. No Node.js build process, package manager, or external CDN dependencies are required.
+* **Design Standards:** Tailored to industrial monitoring systems, incorporating high data density and Kempower visual branding conventions.
+
+### Running the Application
+
+Clone the repository and open `index.html` in any modern web browser:
+
 ```bash
-# Clone the repository
 git clone https://github.com/phamduchaianh/site-care.git
 cd site-care
 
-# Open directly in your browser
-xdg-open index.html   # Linux
-open index.html       # macOS
-start index.html      # Windows
+# Open in browser directly
+xdg-open index.html       # Linux
+open index.html           # macOS
+start index.html          # Windows
 
-# Or serve via any local static server
+# Or run via local static web server
 python3 -m http.server 8080
-# Visit http://localhost:8080
 ```
 
 ---
 
-## 🔍 Key Demo Scenarios
+## Integration Architecture
 
-### 1. S1 Bus Depot North — Predictive Anomaly Detection & SLA Defense
+SiteCare is structured for integration into existing EV depot management ecosystems:
 
-```
-[01:50 Telemetry]        [SLA Engine]             [Autonomous Orchestrator]
-Cabinet C1-3 (360 kW) ──▶ Bus B09 (Dep: 06:00) ──▶ 1. Auto-dispatch Tech TE1 (<04:00)
-Temp: 58.9°C (+14.9°C)    3 Queued Morning Buses   2. Quarantine Dispensers D1-9..12
-F015 Derate 50%           €600 SLA Penalty Risk    3. Reroute Critical Charging
-```
-
-* **The Anomaly:** Cabinet **C1-3 (360 kW)** exhibited an elevated temperature profile (+14.9°C above peer cabinets F010 & F012) and triggered an intermittent derate code (`F015`).
-* **The Impact:** Bus **B09** was actively charging (requiring 90% SoC before its 06:00 run), with 3 additional morning rush buses scheduled on dispensers `D1-9` through `D1-12`. Without intervention, a shutdown would cause 4 missed departures and **€600 in contract penalties**.
-* **SiteCare Action:**
-  - Automatically dispatches certified technician **TE1** with guaranteed arrival before 04:00.
-  - Quarantines dispensers `D1-9..D1-12` against high-current draws to prevent thermal runaway while preserving battery readiness.
-* **Baseline vs. SiteCare:**
-  - *Nov 13 Baseline (Unmanaged):* 02:25 shutdown ➔ 4 missed bus departures ➔ €600 SLA penalty ➔ repair finished late at 06:31.
-  - *With SiteCare:* Early warning ➔ proactive technician dispatch ➔ 100% on-time departures preserved.
+* **Telemetry Ingestion:** Consumes cabinet and dispenser sensor streams (temperatures, power outputs, error codes) via OCPP 2.0.1 and Kempower ChargEye telemetry APIs.
+* **Fleet Schedule Synchronization:** Connects with fleet management systems (FMS) via standard REST/GraphQL interfaces to ingest route departure schedules and required battery capacities.
+* **Grid and Market Feeds:** Ingests regional day-ahead electricity spot market feeds (such as Nord Pool or ENTSO-E) and local distribution system operator (DSO) constraint limits.
+* **Control Dispatch:** Issues dynamic current-limit and reservation commands back to charging hardware via OCPP Smart Charging profiles.
 
 ---
 
-### 2. S2 Logistics Depot East — Smart Energy & Grid Peak Shaving
+## License
 
-```
-Spot Tariff: €82.33 / 100 kWh (18:00 Peak)  ──▶ Shift to ──▶ €11.06 / 100 kWh (20:00 Low)
-Site Grid Ceiling: 400 kW Hard Cap          ──▶ Enforced ─▶ 0 Grid Violations
-Cost Reduction: €689 ─────────────────────────────────────▶ €482 (-30.0%)
-```
-
-* **Dynamic Spot Arbitrage:** Identifies high hourly tariff spreads (e.g., **€82.33/100 kWh** at 18:00 vs. **€11.06/100 kWh** at 20:00 — a **€71.27/100 kWh potential delta**).
-* **Smart Load Management:**
-  - Prioritizes tight-deadline vehicles while deferring flexible charging sessions to off-peak tariff periods.
-  - Continuously throttles aggregate site draw below the **400 kW grid limit**, avoiding costly demand surges and transformer strain.
-* **Interactive Simulation Results:**
-  - **Trucks Below Target SoC:** Reduced from **4 ➔ 1**
-  - **Grid Violations:** Kept strictly at **0 ➔ 0**
-  - **Depot Energy Spend:** Drops from **€689 ➔ €482** (~30% direct savings)
-
----
-
-## 🛠️ Architecture & Technology
-
-- **Frontend:** Pure HTML5, CSS3 Custom Properties, Responsive Flex/Grid layout, and Vanilla JavaScript.
-- **Visualizations:** Inline SVG vector charts for spot price curve comparisons and responsive CSS state transitions.
-- **Kempower Design Language:** Integrated brand colors (Kempower Orange `#ff6700`, deep slate `#0f172a`, and clean typography) designed to match industrial charging software aesthetics.
-- **Portability:** 100% self-contained in a single `index.html` file with zero build tools, package managers, or external CDN dependencies.
-
----
-
-## 🔮 Future Roadmap
-
-- [ ] **Real-time OCPP 2.0.1 / ISO 15118 Ingestion:** Direct integration with Kempower ChargEye telemetry streams.
-- [ ] **AI-driven Component Lifetime Degradation:** Remaining Useful Life (RUL) forecasting for power modules and cooling fans.
-- [ ] **Bi-directional V2G / Depot Battery Storage (BESS):** Automated revenue generation via frequency regulation and peak clipping.
-- [ ] **Multi-Depot Fleet Fleet Control:** Enterprise-grade dashboard aggregating across dozens of regional charging hubs.
-
----
-
-## 👥 Hackathon Team
-
-Developed with ❤️ for the **Kempower Hackathon 2026**.
-
-* Repository: [github.com/phamduchaianh/site-care](https://github.com/phamduchaianh/site-care)
-* Demo Application: [`index.html`](index.html)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
